@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @RestController
 @RequestMapping("/letter")
@@ -26,10 +24,11 @@ public class LetterController {
 
     @PostMapping("/send")
     public ResponseEntity<String> send(@RequestBody Letter letter) {
+        // Генерация ключа для удобного отслеживания жизненного цикла сообщения
         String key = Utils.generateKafkaMessageKey();
         try {
-            producer.sendMessage(mapper.writeValueAsString(letter));
-            log.info("Отправлено сообщение по кафке с ключом {} в {}", key, LocalDateTime.now());
+            // Отправка сообщения
+            producer.sendMessage(key, mapper.writeValueAsString(letter));
         } catch (Exception e) {
             log.error("Ошибка при отправке сообщения: {}. Ключ = {}", e.getMessage(), key);
             throw new RuntimeException(e);

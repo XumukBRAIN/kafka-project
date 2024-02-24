@@ -14,8 +14,19 @@ public class KafkaProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendMessage(String message) {
-        kafkaTemplate.send("letter", message);
-        log.info("Сообщение отправлено в " + LocalDateTime.now());
+    /**
+     * Отправка сообщения
+     *
+     * @param key Ключ
+     * @param message Сообщение
+     */
+    public void sendMessage(String key, String message) {
+        try {
+            // P.S. Метод send имеет разные конструкторы, совет ознакомиться с ними
+            kafkaTemplate.send("letter", key, message);
+            log.info("Сообщение с ключом {} отправлено в {}", key, LocalDateTime.now());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

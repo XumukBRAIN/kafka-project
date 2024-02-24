@@ -26,7 +26,6 @@ public class LetterService {
         try {
             Letter saved = repository.save(letter);
             id = saved.getId();
-            log.info("Письмо успешно сохранено. Присвоен идентификатор: {}", id);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
